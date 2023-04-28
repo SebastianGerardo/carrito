@@ -1,57 +1,45 @@
-import { useEffect, useState } from 'react';
-import Products from './components/products';
-import Cart from './components/cart';
+//Se importa Outlet de react-router-dom para poder usarlo en el return
+import { useContext } from 'react';
+import {Outlet} from 'react-router-dom'
+import { UserContext } from './context/ContextCarrito';
 
 const App = () => {
-	const [carrito, setCarrito] = useState(
-		JSON.parse(localStorage.getItem('carrito')) || []
-	);
-
-	const agregarAlCarrito = (item) => {
-		const copiaCarrito = [...carrito];
-		// 1. verificar si el item ya existía en el carrito.
-		const itemEncontrado = copiaCarrito.find((prod) => prod.id === item.id);
-		if (itemEncontrado) {
-			// 2. significa que item es diferente de undefined y que por ende, ya
-			// existía
-			itemEncontrado.cant += 1;
-			setCarrito(copiaCarrito);
-		} else {
-			// 2. el item no existía, por ende, itemEncontrado = undefined
-			const nuevoItemAlCarrito = { ...item };
-			nuevoItemAlCarrito.cant = 1;
-			copiaCarrito.push(nuevoItemAlCarrito);
-			setCarrito(copiaCarrito);
-		}
-	};
-
-	const eliminarDelCarrito = (id) => {
-		const copiaCarrito = [...carrito];
-		const nuevosProductos = copiaCarrito.filter((prod) => prod.id !== id);
-		setCarrito(nuevosProductos);
-	};
-
-	const guardarCarrito = () => {
-		localStorage.setItem('carrito', JSON.stringify(carrito));
-	};
-
-	useEffect(() => {
-		guardarCarrito();
-	}, [carrito]);
-
-	return (
-		<div className="container-fluid">
-			<div className="row">
-				<div className="col-md-2">FILTRADOR</div>
-				<div className="col-md-7">
-					<Products agregarAlCarrito={agregarAlCarrito} />
-				</div>
-				<div className="col-md-3">
-					<Cart carrito={carrito} eliminarDelCarrito={eliminarDelCarrito} />
-				</div>
-			</div>
+    const {carrito} = useContext(UserContext); //1.Se usa el useContext para obtener la variable carrito del contexto ContextCarrito
+  return (
+	<section>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <div className="container px-4 px-lg-5">
+                <a className="navbar-brand" href="#!">Start Bootstrap</a>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span className="navbar-toggler-icon"></span></button>
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li className="nav-item"><a className="nav-link active" aria-current="page" href="#!">Home</a></li>
+                        <li className="nav-item"><a className="nav-link" href="#!">About</a></li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a className="dropdown-item" href="#!">All Products</a></li>
+                                <li><hr className="dropdown-divider" /></li>
+                                <li><a className="dropdown-item" href="#!">Popular Items</a></li>
+                                <li><a className="dropdown-item" href="#!">New Arrivals</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form className="d-flex">
+                        <button className="btn btn-outline-dark" type="submit">
+                            <i className="bi-cart-fill me-1"></i>
+                            Cart
+                            <span className="badge bg-dark text-white ms-1 rounded-pill">{carrito.length}</span> {/*2.Se usa la variable carrito para mostrar la cantidad de productos que hay en el carrito*/}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+		<div>
+			<Outlet /> {/*Se usa Outlet para renderizar los componentes segun la ruta en donde se encuentre*/}
 		</div>
-	);
-};
+	</section>
+  )
+}
 
-export default App;
+export default App

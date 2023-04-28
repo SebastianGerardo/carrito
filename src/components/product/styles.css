@@ -1,3 +1,10 @@
+.card-container {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	text-align: center;
+	max-width: 16rem;
+}
+
 .product-image {
 	height: 10rem;
 	object-fit: contain;
@@ -13,4 +20,10 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
+}
+
+.button-container {
+	display: flex;
+	justify-content: center;
+	gap: .2px;
 }
